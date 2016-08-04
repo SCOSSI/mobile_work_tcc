@@ -1,0 +1,82 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Sample 1</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeSampleOne()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="postSampleOne()">
+      <div class="list">
+
+        <div class="item item-divider">
+          Where are you?
+        </div>
+
+        <ion-radio ng-repeat="item in places"
+                   ng-value="item.value"
+                   ng-model="sampleOne.place">
+          {{ item.text }}
+        </ion-radio>
+        <label class="item item-input" ng-show="sampleOne.place == 'other'">
+          <span class="input-label">Other</span>
+          <input type="text" ng-model="sampleOne.placeOther">
+        </label>
+        <div class="item item-divider">
+          What are you doing right now?
+        </div>
+        <ion-radio ng-repeat="item in tasks"
+                   ng-value="item.value"
+                   ng-model="sampleOne.doing">
+          {{ item.text }}
+        </ion-radio>
+        <div class="item item-divider">
+          Are you working with someone right now?
+        </div>
+        <ion-radio ng-repeat="item in yesorno"
+                   ng-value="item.value"
+                   ng-model="sampleOne.isWorkingWithSomeone">
+          {{ item.text }}
+        </ion-radio>
+        <div class="item item-divider" ng-show="sampleOne.isWorkingWithSomeone == 'yes'">
+          Who is this person?
+        </div>
+        <ion-radio ng-repeat="item in persons"
+                   ng-value="item.value"
+                   ng-model="sampleOne.isWorkingWith"
+                   ng-show="sampleOne.isWorkingWithSomeone == 'yes'">
+          {{ item.text }}
+        </ion-radio>
+        <label class="item item-input" ng-show="sampleOne.isWorkingWith == 'other'">
+          <span class="input-label">Other</span>
+          <input type="text" ng-model="sampleOne.isWorkingWithSomeoneOther">
+        </label>
+
+        <div class="item item-divider">
+          How are you feeling right now?
+        </div>
+        <ion-radio ng-repeat="item in feelings"
+                   ng-value="item.value"
+                   ng-model="sampleOne.feeling"
+                   >
+          {{ item.text }}
+        </ion-radio>
+        <ion-radio ng-repeat="item in positiveFeelings"
+                   ng-value="item.value"
+                   ng-model="sampleOne.feelingPositive"
+                   ng-show="sampleOne.feeling == 'positive'"
+        >
+          {{ item.text }}
+        </ion-radio>
+        <ion-radio ng-repeat="item in negativeFeelings"
+                   ng-value="item.value"
+                   ng-model="sampleOne.feelingNegative"
+                   ng-show="sampleOne.feeling == 'negative'"
+        >
+          {{ item.text }}
+        </ion-radio>
+
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

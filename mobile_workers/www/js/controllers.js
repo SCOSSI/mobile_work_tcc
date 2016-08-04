@@ -8,7 +8,8 @@ angular.module('starter.controllers', [])
     // listen for the $ionicView.enter event:
     //$scope.$on('$ionicView.enter', function(e) {
     //});
-
+    $scope.sampleOne = {};
+    console.log($scope.sampleOne);
     // Form data for the login modal
     $scope.loginData = {};
 
@@ -39,10 +40,52 @@ angular.module('starter.controllers', [])
         $scope.closeLogin();
       }, 1000);
     };
+
+    $ionicModal.fromTemplateUrl('templates/sampleOne.html', {
+      scope: $scope
+    }).then(function (modal) {
+      $scope.modalSampleOne = modal;
+    });
+
+    $scope.sampleOne = function () {
+      $scope.modalSampleOne.show();
+    };
+
+    $scope.closeSampleOne = function () {
+
+    };
+
+    $scope.postSampleOne = function () {
+
+    };
+
+    $scope.places = [{text: "Home", value: "home"}, {
+      text: "Transportation",
+      value: "transportation"
+    }, {text: "Main work", value: "main work"}, {text: "Office", value: "office"}, {
+      text: "Public space",
+      value: "public space"
+    }, {text: "Client", value: "client"}, {text: "Other", value: "other"}];
+
+    $scope.tasks = [{text: "Main activity", value: "main activity"}, {
+      text: "Related activity",
+      value: "related activity"
+    }];
+    $scope.yesorno = [{text: "Yes", value: "yes"}, {text: "No", value: "no"}];
+    $scope.persons = [{text: "Leader", value: "leader"}, {text: "Colleague", value: "colleague"}, {
+      text: "Client",
+      value: "client"
+    }, {text: "Team member", value: "team member"}, {text: "Other", value: "other"}];
+    $scope.feelings = [{text: "Positive", value: "positive"}, {text: "Negative", value: "negative"}];
+    $scope.positiveFeelings = [{text: "Enthusiasm", value: "enthusiasm"}, {text: "Interest", value: "interest"}, {text: "Determination", value: "determination"}, {text: "Being energetic", value: "being energetic"}];
+    $scope.negativeFeelings = [{text: "Irritation", value: "irritation"}, {text: "Exhaustion", value: "exhaustion"}, {text: "Nervousness", value: "nervousness"}, {text: "Anxiety", value: "anxiety"}];
+
+
+
   })
   .controller('LoginFaceCtrl', function ($scope, $cordovaOauth, $localStorage, $location) {
     $scope.login = function () {
-      $cordovaOauth.facebook("1102648526473457", ["email",  "user_website", "user_location", "user_relationships"]).then(function (result) {
+      $cordovaOauth.facebook("1102648526473457", ["email", "user_website", "user_location", "user_relationships"]).then(function (result) {
         $localStorage.accessToken = result.access_token;
         $location.path("#/profile");
 
@@ -54,11 +97,17 @@ angular.module('starter.controllers', [])
     };
   })
   .controller('ProfileCtrl', function ($scope, $http, $localStorage, $location) {
-    $scope.init = function() {
-      if($localStorage.hasOwnProperty("accessToken") === true) {
-        $http.get("https://graph.facebook.com/v2.2/me", { params: { access_token: $localStorage.accessToken, fields: "id,name,gender,location,website,picture,relationship_status", format: "json" }}).then(function(result) {
+    $scope.init = function () {
+      if ($localStorage.hasOwnProperty("accessToken") === true) {
+        $http.get("https://graph.facebook.com/v2.2/me", {
+          params: {
+            access_token: $localStorage.accessToken,
+            fields: "id,name,gender,location,website,picture,relationship_status",
+            format: "json"
+          }
+        }).then(function (result) {
           $scope.profileData = result.data;
-        }, function(error) {
+        }, function (error) {
           alert("There was a problem getting your profile.  Check the logs for details.");
           console.log(error);
         });
