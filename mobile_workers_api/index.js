@@ -44,6 +44,7 @@ app.use(function(req, res, next) {
 
 router.get('/api', routes.welcomeAPI);//api end point
 router.post('/api/geolocation', routes.createGeolocation);//create a new recipe type (POST)
+router.post('/api/test', routes.test);
 /*router.get('/api/recipetypes', routes.getRecipeTypes);//recipe types listing end point
 router.put('/api/recipetype/:recipe_type', routes.updateRecipeType);
 router.delete('/api/recipetype', routes.deleteRecipeType);*/
@@ -51,8 +52,11 @@ router.delete('/api/recipetype', routes.deleteRecipeType);*/
 app.use('/', router);
 
 //create server & listen on port 3000
-http.createServer(app).listen(app.get('port'), function(){
-    console.log('Express Server Running!');
+var server = http.createServer(app).listen(app.get('port'), '127.0.0.1', function(){
+    var host = server.address().address;
+    var port = server.address().port;
+
+    console.log('running at http://' + host + ':' + port);
 });
 
 //export app

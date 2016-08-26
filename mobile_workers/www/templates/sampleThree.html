@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Sample 3</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeSampleThree()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="postSampleThree()">
+      <div class="list">
 
-</body>
-</html>
+        <div class="item item-divider">
+          Did you share some new information or knowledge with someone today?
+        </div>
+
+        <ion-radio ng-repeat="item in yesorno"
+                   ng-value="item.value"
+                   ng-model="sampleThree.sharedInformation" name="sharedInformation">
+          {{ item.text }}
+        </ion-radio>
+        <label class="item item-input" ng-show="sampleThree.sharedInformation == 'yes'">
+          <span class="input-label">Who is this person?</span>
+          <input type="text" ng-model="sampleThree.whoWithSharedInformation">
+        </label>
+        <label class="item item-input" ng-show="sampleThree.sharedInformation == 'yes'">
+          <span class="input-label">Say something about what she/he needed?</span>
+          <input type="text" ng-model="sampleThree.informationPersonNeeded">
+        </label>
+        <div class="item item-divider">
+          Which tool did you use?
+        </div>
+        <ion-radio ng-repeat="item in comunicationTools"
+                   ng-value="item.value"
+                   ng-model="sampleThree.communicationToolUsed" name="communicationToolUsed"
+                   >
+          {{ item.text }}
+        </ion-radio>
+        <label class="item item-input" ng-show="sampleThree.communicationToolUsed == 'other'">
+          <span class="input-label">Other</span>
+          <input type="text" ng-model="sampleThree.communicationToolUsedOther">
+        </label>
+
+      </div>
+      <button class="button button-full button-positive" type="submit">
+        Send
+      </button>
+    </form>
+  </ion-content>
+</ion-modal-view>

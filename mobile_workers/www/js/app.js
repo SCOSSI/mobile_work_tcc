@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'ngCordova', 'ngCordovaOauth', 'ngStorage'])
 
-  .run(function ($ionicPlatform) {
+  .run(function ($ionicPlatform, bgGeolocationService) {
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -16,23 +16,11 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
 
       }
       if (window.StatusBar) {
-        // org.apache.cordova.statusbar required
+
         StatusBar.styleDefault();
       }
+     
 
-      // Enable to debug issues.
-      // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
-
-      var notificationOpenedCallback = function(jsonData) {
-        console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
-      };
-
-      window.plugins.OneSignal.init("1ce04ea6-ba67-44b1-b6de-8ce49fc19659",
-        {googleProjectNumber: "442430972690"},
-        notificationOpenedCallback);
-
-      // Show an alert box if a notification comes in when the user is in your app.
-      window.plugins.OneSignal.enableInAppAlertNotification(true);
     });
   })
 

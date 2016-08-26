@@ -23,5 +23,10 @@ exports.createGeolocation = function (req, res) {
     });
 
 }
+exports.test = function (req, res) {
+    console.log(req.body);
+    
+
+}
 
 

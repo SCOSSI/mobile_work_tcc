@@ -10,12 +10,13 @@
       <div class="list">
 
         <div class="item item-divider">
-          Where are you?
+          Where are you? {{sampleOne.place}}
         </div>
 
         <ion-radio ng-repeat="item in places"
                    ng-value="item.value"
-                   ng-model="sampleOne.place">
+                   ng-model="sampleOne.place"
+                    name="place">
           {{ item.text }}
         </ion-radio>
         <label class="item item-input" ng-show="sampleOne.place == 'other'">
@@ -27,7 +28,7 @@
         </div>
         <ion-radio ng-repeat="item in tasks"
                    ng-value="item.value"
-                   ng-model="sampleOne.doing">
+                   ng-model="sampleOne.doing" name="doing">
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider">
@@ -35,7 +36,7 @@
         </div>
         <ion-radio ng-repeat="item in yesorno"
                    ng-value="item.value"
-                   ng-model="sampleOne.isWorkingWithSomeone">
+                   ng-model="sampleOne.isWorkingWithSomeone" name="isWorkingWithSomeone">
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider" ng-show="sampleOne.isWorkingWithSomeone == 'yes'">
@@ -44,7 +45,7 @@
         <ion-radio ng-repeat="item in persons"
                    ng-value="item.value"
                    ng-model="sampleOne.isWorkingWith"
-                   ng-show="sampleOne.isWorkingWithSomeone == 'yes'">
+                   ng-show="sampleOne.isWorkingWithSomeone == 'yes'" name="isWorkingWith">
           {{ item.text }}
         </ion-radio>
         <label class="item item-input" ng-show="sampleOne.isWorkingWith == 'other'">
@@ -57,26 +58,29 @@
         </div>
         <ion-radio ng-repeat="item in feelings"
                    ng-value="item.value"
-                   ng-model="sampleOne.feeling"
-                   >
+                   ng-model="sampleOne.feeling" name="feeling"
+        >
           {{ item.text }}
         </ion-radio>
         <ion-radio ng-repeat="item in positiveFeelings"
                    ng-value="item.value"
                    ng-model="sampleOne.feelingPositive"
-                   ng-show="sampleOne.feeling == 'positive'"
+                   ng-show="sampleOne.feeling == 'positive'" name="feelingPositive"
         >
           {{ item.text }}
         </ion-radio>
         <ion-radio ng-repeat="item in negativeFeelings"
                    ng-value="item.value"
                    ng-model="sampleOne.feelingNegative"
-                   ng-show="sampleOne.feeling == 'negative'"
+                   ng-show="sampleOne.feeling == 'negative'" name="feelingNegative"
         >
           {{ item.text }}
         </ion-radio>
 
       </div>
+      <button class="button button-full button-positive" type="submit">
+        Send
+      </button>
     </form>
   </ion-content>
 </ion-modal-view>
