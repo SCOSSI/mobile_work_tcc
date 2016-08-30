@@ -1,10 +1,10 @@
 <ion-side-menus enable-menu-with-back-views="false">
-  <ion-side-menu-content>
-    <ion-nav-bar class="bar-stable">
+  <ion-side-menu-content >
+    <ion-nav-bar ng-show="showMenu" class="bar-stable">
       <ion-nav-back-button>
       </ion-nav-back-button>
 
-      <ion-nav-buttons side="left">
+      <ion-nav-buttons  side="left">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
@@ -18,27 +18,21 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close ng-click="login()">
-          Login
-        </ion-item>
-        <ion-item menu-close ng-click="sampleOne()">
+
+        <ion-item menu-close ng-click="showSampleOne()">
           Sample One
         </ion-item>
-        <ion-item menu-close ng-click="sampleTwo()">
+        <ion-item menu-close ng-click="showSampleTwo()">
           Sample Two
         </ion-item>
-        <ion-item menu-close ng-click="sampleThree()">
+        <ion-item menu-close ng-click="showSampleThree()">
           Sample Three
         </ion-item>
-        <ion-item menu-close href="#/app/playlists">
-          Playlists
-        </ion-item>
+
         <ion-item menu-close href="#/app/map">
           Map
         </ion-item>
-        <ion-item menu-close href="#/app/loginface">
-          Login facebook
-        </ion-item>
+
         <ion-item menu-close href="#/app/profile">
           Profile
         </ion-item>

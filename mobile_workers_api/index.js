@@ -43,7 +43,11 @@ app.use(function(req, res, next) {
 });
 
 router.get('/api', routes.welcomeAPI);//api end point
-router.post('/api/geolocation', routes.createGeolocation);//create a new recipe type (POST)
+router.post('/api/addUserGeolocation', routes.addUserGeolocation);//create a new recipe type (POST)
+router.post('/api/addSampleOne', routes.addSampleOne);//create a new recipe type (POST)
+router.post('/api/addSampleTwo', routes.addSampleTwo);//create a new recipe type (POST)
+router.post('/api/addSampleThree', routes.addSampleThree);//create a new recipe type (POST)
+router.post('/api/addUser', routes.addUser);//create a new recipe type (POST)
 router.post('/api/test', routes.test);
 /*router.get('/api/recipetypes', routes.getRecipeTypes);//recipe types listing end point
 router.put('/api/recipetype/:recipe_type', routes.updateRecipeType);

@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'ngCordova', 'ngCordovaOauth', 'ngStorage'])
 
-  .run(function ($ionicPlatform, bgGeolocationService) {
+  .run(function ($ionicPlatform, $rootScope, $state,$localStorage) {
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -19,9 +19,13 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
 
         StatusBar.styleDefault();
       }
-     
+
+
+
+
 
     });
+
   })
 
   .config(function ($stateProvider, $urlRouterProvider) {
@@ -31,19 +35,13 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
         url: '/app',
         abstract: true,
         templateUrl: 'templates/menu.html',
-        controller: 'AppCtrl'
+        controller: 'AppCtrl',
+
       })
 
-      .state('app.search', {
-        url: '/search',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/search.html'
-          }
-        }
-      })
       .state('app.map', {
         url: '/map',
+
         views: {
           'menuContent': {
             templateUrl: 'templates/map.html',
@@ -53,6 +51,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
       })
       .state('app.loginface', {
         url: '/loginface',
+        requireAuth: true,
         views: {
           'menuContent': {
             templateUrl: 'templates/loginface.html',
@@ -62,6 +61,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
       })
       .state('app.profile', {
         url: '/profile',
+
         views: {
           'menuContent': {
             templateUrl: 'templates/profile.html',
@@ -70,33 +70,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
         }
       })
 
-      .state('app.browse', {
-        url: '/browse',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/browse.html'
-          }
-        }
-      })
-      .state('app.playlists', {
-        url: '/playlists',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/playlists.html',
-            controller: 'PlaylistsCtrl'
-          }
-        }
-      })
 
-      .state('app.single', {
-        url: '/playlists/:playlistId',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/playlist.html',
-            controller: 'PlaylistCtrl'
-          }
-        }
-      });
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/playlists');
+    $urlRouterProvider.otherwise('/app/loginface');
   });

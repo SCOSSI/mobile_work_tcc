@@ -2,7 +2,11 @@
  * Created by GABRIEL on 21/07/2016.
  */
 
-var Geolocation = require('./model/geolocation.model');
+var userGeolocation = require('./model/userGeolocation.model');
+var user = require('./model/user.model');
+var sampleOne = require('./model/sampleOne.model');
+var sampleTwo = require('./model/sampleTwo.model');
+var sampleThree = require('./model/sampleThree.model');
 var logger = require(__dirname + '/../utils/logger');
 
 /**
@@ -15,13 +19,50 @@ exports.welcomeAPI = function (req, res) {
     res.json({message: 'Welcome to Recipe API!'});
 }
 
-exports.createGeolocation = function (req, res) {
-    logger.log('info', 'encontrou!');
-    Geolocation.create(req.body, function (err, resp) {
-        if (err) console.log('Error saving recipe type');
+exports.addUserGeolocation = function (req, res) {
+    logger.log('info', 'addUserGeolocation called!');
+    userGeolocation.create(req.body, function (err, resp) {
+        if (err) console.log('Error saving addUserGeolocation');
         res.json(resp);
     });
 
+}
+
+exports.addSampleOne = function (req, res) {
+    logger.log('info', 'addSampleOne called!');
+    sampleOne.create(req.body, function (err, resp) {
+        if (err) console.log('Error saving addSampleOne');
+        res.json(resp);
+    });
+
+}
+
+exports.addSampleTwo = function (req, res) {
+    logger.log('info', 'addSampleTwo called!');
+    sampleTwo.create(req.body, function (err, resp) {
+        if (err) console.log('Error saving addSampleTwo');
+        res.json(resp);
+    });
+
+}
+
+exports.addSampleThree = function (req, res) {
+    logger.log('info', 'addSampleThree called!');
+    sampleThree.create(req.body, function (err, resp) {
+        if (err) console.log('Error saving addSampleThree');
+        res.json(resp);
+    });
+
+}
+
+
+
+exports.addUser = function (req, res) {
+    logger.log('info', 'addUser called!');
+    user.create(req.body, function (err, resp) {
+        if (err) console.log('Error saving addUser');
+        res.json(resp);
+    });
 }
 exports.test = function (req, res) {
     console.log(req.body);

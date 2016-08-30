@@ -1,47 +1,19 @@
 angular.module('starter.controllers', [])
 
-  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $ionicPlatform) {
+  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $ionicPlatform, user, $rootScope, $ionicSideMenuDelegate, geolocationService, sampleOneFactory) {
 
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
+
     $scope.sampleOne = {};
     $scope.sampleTwo = {};
     $scope.sampleThree = {};
-    console.log($scope.sampleOne);
-    // Form data for the login modal
-    $scope.loginData = {};
+    $scope.showMenu = user.isAuthenticated();
 
-    // Create the login modal that we will use later
-    $ionicModal.fromTemplateUrl('templates/login.html', {
-      scope: $scope
-    }).then(function (modal) {
-      $scope.modal = modal;
+    $rootScope.$on('userLogout', function (event, userLogout) {
+      console.log("userLogout: "+userLogout);
+      $scope.showMenu = !userLogout;
+      $ionicSideMenuDelegate.canDragContent(!userLogout);
     });
 
-    // Triggered in the login modal to close it
-    $scope.closeLogin = function () {
-      $scope.modal.hide();
-    };
-
-    // Open the login modal
-    $scope.login = function () {
-      $scope.modal.show();
-    };
-
-    // Perform the login action when the user submits the login form
-    $scope.doLogin = function () {
-      console.log('Doing login', $scope.loginData);
-
-      // Simulate a login delay. Remove this and replace with your login
-      // code if using a login system
-      $timeout(function () {
-        $scope.closeLogin();
-      }, 1000);
-    };
 
     $ionicModal.fromTemplateUrl('templates/sampleOne.html', {
       scope: $scope
@@ -49,8 +21,10 @@ angular.module('starter.controllers', [])
       $scope.modalSampleOne = modal;
     });
 
-    $scope.sampleOne = function () {
-      $scope.modalSampleOne.show();
+    $scope.showSampleOne = function () {
+      if(user.isAuthenticated()) {
+        $scope.modalSampleOne.show();
+      }
     };
 
     $scope.closeSampleOne = function () {
@@ -58,6 +32,12 @@ angular.module('starter.controllers', [])
     };
 
     $scope.postSampleOne = function () {
+      $scope.sampleOne.latitude = 0;
+      $scope.sampleOne.longitude = 1;
+      $scope.sampleOne.userEmail = 'gabrielscossi@gmail.com';
+      console.log(JSON.stringify($scope.sampleOne));
+      sampleOneFactory.save($scope.sampleOne);
+      //geolocationService.getCurrentPosition();
 
     };
 
@@ -67,8 +47,10 @@ angular.module('starter.controllers', [])
       $scope.modalSampleTwo = modal;
     });
 
-    $scope.sampleTwo = function () {
-      $scope.modalSampleTwo.show();
+    $scope.showSampleTwo = function () {
+      if(user.isAuthenticated()) {
+        $scope.modalSampleTwo.show();
+      }
     };
 
     $scope.closeSampleTwo = function () {
@@ -85,8 +67,10 @@ angular.module('starter.controllers', [])
       $scope.modalSampleThree = modal;
     });
 
-    $scope.sampleThree = function () {
-      $scope.modalSampleThree.show();
+    $scope.showSampleThree = function () {
+      if(user.isAuthenticated()) {
+        $scope.modalSampleThree.show();
+      }
     };
 
     $scope.closeSampleThree = function () {
@@ -98,14 +82,16 @@ angular.module('starter.controllers', [])
     };
 
     $scope.openModals = function (openModal) {
-      console.log(JSON.stringify(openModal));
-      if (openModal == 'sampleOne') {
-        $scope.sampleOne();
-      } else if (openModal == 'sampleTwo') {
-        $scope.sampleTwo();
-      } else {
-        $scope.sampleThree();
-      }
+
+        if (openModal == 'sampleOne') {
+          $scope.showSampleOne();
+        } else if (openModal == 'sampleTwo') {
+          $scope.showSampleTwo();
+        } else {
+          $scope.showSampleThree();
+        }
+
+
 
     }
 
@@ -173,177 +159,151 @@ angular.module('starter.controllers', [])
 
 
   })
-  .controller('LoginFaceCtrl', function ($scope, $cordovaOauth, $localStorage, $location) {
-    $scope.login = function () {
-      $cordovaOauth.facebook("1102648526473457", ["email", "user_website", "user_location", "user_relationships"]).then(function (result) {
-        $localStorage.accessToken = result.access_token;
-        $location.path("#/profile");
+  .controller('LoginFaceCtrl', function ($scope, $cordovaOauth, $localStorage, $ionicSideMenuDelegate, user, $state, $rootScope) {
+    if (!user.isAuthenticated()) {
+      $ionicSideMenuDelegate.canDragContent(false);
 
-      }, function (error) {
-        console.log("There was a problem signing in!  See the console for logs");
-        alert("There was a problem signing in!  See the console for logs");
-        console.log(error);
-      });
-    };
-  })
-  .controller('ProfileCtrl', function ($scope, $http, $localStorage, $location) {
-    $scope.init = function () {
-      if ($localStorage.hasOwnProperty("accessToken") === true) {
-        $http.get("https://graph.facebook.com/v2.2/me", {
-          params: {
-            access_token: $localStorage.accessToken,
-            fields: "id,name,gender,location,website,picture,relationship_status",
-            format: "json"
-          }
-        }).then(function (result) {
-          $scope.profileData = result.data;
+      $scope.login = function () {
+        $cordovaOauth.facebook("1102648526473457", ["email", "user_website", "user_location", "user_relationships"]).then(function (result) {
+
+          $localStorage.accessToken = result.access_token;
+          //location.path("#/profile");
+          $rootScope.$emit('userLogout', false);
+          $state.go("app.profile");
+
         }, function (error) {
-          alert("There was a problem getting your profile.  Check the logs for details.");
+          console.log("There was a problem signing in!  See the console for logs");
+          alert("There was a problem signing in!  See the console for logs");
           console.log(error);
         });
-      } else {
-        console.log("Not signed in");
-        alert("Not signed in");
-        $location.path("#/profile");
+      };
+    }
+  })
+  .controller('ProfileCtrl', function ($scope, $http, $localStorage, $state, user, $rootScope) {
+    $scope.init = function () {
+      if (user.isAuthenticated()){
+
+        $scope.profileData = user.getUser();
+        console.log( JSON.stringify($scope.profileData ));
       }
     };
+
+    $scope.logout = function(){
+      delete $localStorage.accessToken;
+      $rootScope.$emit('userLogout', true);
+      $state.go("app.loginface");
+
+    }
   })
-  .controller('MapCtrl', function ($scope, $state, $ionicPlatform, mapService, bgGeolocationService, $rootScope, $interval, test) {
+  .controller('MapCtrl', function ($scope, $state, $ionicPlatform, mapService,  $rootScope, $interval, test, user) {
 
-
-    $ionicPlatform.ready(function () {
-
-      $scope.watchLocations = function () {
-
-
-        backgroundGeolocation.getLocations(
-          function (locations) {
-            console.log("getLocations");
-            console.log(JSON.stringify(locations));
-          }
-        );
-
-
-      };
-
-
-
-
-      var position = {lat: -25.363, lng: 131.044};
-
-      $scope.map = mapService.createMap(position);
-      //bgGeolocationService.run();
 
       $ionicPlatform.ready(function () {
 
-        var callbackFn = function (location) {
-          console.log('[js] BackgroundGeolocation callback:  ' + location.latitude + ',' + location.longitude);
-          var latlng = {latitude: location.latitude, longitude: location.longitude};
-          $rootScope.$emit('geolocationUpdated', new google.maps.LatLng(location.latitude, location.longitude));
-          locationsSave = {user: "gabriel", locations: latlng, date: new Date()};
-          test.save(locationsSave);
-
-          backgroundGeolocation.finish();
-
-        };
 
 
-        var failureFn = function (error) {
-          console.log('BackgroundGeolocation error');
-        };
 
-        backgroundGeolocation.configure(callbackFn, failureFn, {
-          desiredAccuracy: 10,
-          stationaryRadius: 1,
-          distanceFilter: 50,
-         // url: 'http://ftsasypskm.localtunnel.me/api/test',
+        var position = {lat: -25.363, lng: 131.044};
 
-          //httpHeaders: { 'X-FOO': 'bar' },
-          // Android only section
-          locationProvider: backgroundGeolocation.provider.ANDROID_ACTIVITY_PROVIDER,
-          interval: 10,
-          fastestInterval: 5,
-          activitiesInterval: 10,
-          notificationTitle: 'Background tracking',
-          notificationText: 'enabled'
-        });
+        $scope.map = mapService.createMap(position);
 
-        backgroundGeolocation.watchLocationMode(
-          function (enabled) {
-            console.log("watchLocationMode " + enabled);
+
+        $ionicPlatform.ready(function () {
+
+          var callbackFn = function (location) {
+            console.log('[js] BackgroundGeolocation callback:  ' + location.latitude + ',' + location.longitude);
+            var latlng = {latitude: location.latitude, longitude: location.longitude};
+            $rootScope.$emit('geolocationUpdated', new google.maps.LatLng(location.latitude, location.longitude));
+            locationsSave = {user: "gabriel", locations: latlng, date: new Date()};
+            test.save(locationsSave);
+
+            backgroundGeolocation.finish();
+
+          };
+
+
+          var failureFn = function (error) {
+            console.log('BackgroundGeolocation error');
+          };
+
+          backgroundGeolocation.configure(callbackFn, failureFn, {
+            desiredAccuracy: 10,
+            stationaryRadius: 1,
+            distanceFilter: 50,
+            // url: 'http://ftsasypskm.localtunnel.me/api/test',
+
+            //httpHeaders: { 'X-FOO': 'bar' },
+            // Android only section
+            locationProvider: backgroundGeolocation.provider.ANDROID_ACTIVITY_PROVIDER,
+            interval: 10,
+            fastestInterval: 5,
+            activitiesInterval: 10,
+            notificationTitle: 'Background tracking',
+            notificationText: 'enabled'
+          });
+
+          backgroundGeolocation.watchLocationMode(
+            function (enabled) {
+              console.log("watchLocationMode " + enabled);
+              if (enabled) {
+                // location service are now enabled
+
+                backgroundGeolocation.start(function () {
+                    console.log("isLocationEnabled start");
+                  },
+                  function (error) {
+
+                    if (error.code === 2) {
+
+                      backgroundGeolocation.showAppSettings();
+
+                    } else {
+                      console.log('Start failed: ' + error.message);
+
+                    }
+                  });
+              } else {
+                console.log('Error watching location');
+              }
+            },
+            function (error) {
+              console.log('Error watching location mode. Error:' + error);
+            }
+          );
+
+          backgroundGeolocation.isLocationEnabled(function (enabled) {
+
             if (enabled) {
-              // location service are now enabled
+              console.log("isLocationEnabled " + enabled);
+              backgroundGeolocation.start(
+                function () {
 
-              backgroundGeolocation.start(function () {
-                  console.log("isLocationEnabled start");
                 },
                 function (error) {
-
                   if (error.code === 2) {
-
                     backgroundGeolocation.showAppSettings();
-
                   } else {
                     console.log('Start failed: ' + error.message);
-
                   }
-                });
-            } else {
-              console.log('Error watching location');
-            }
-          },
-          function (error) {
-            console.log('Error watching location mode. Error:' + error);
-          }
-        );
-
-        backgroundGeolocation.isLocationEnabled(function (enabled) {
-
-          if (enabled) {
-            console.log("isLocationEnabled " + enabled);
-            backgroundGeolocation.start(
-              function () {
-                console.log("isLocationEnabled start");
-                /*$interval(function () {
-                  $scope.watchLocations();
-                }, 60000);*/
-              },
-              function (error) {
-                if (error.code === 2) {
-                  backgroundGeolocation.showAppSettings();
-                } else {
-                  console.log('Start failed: ' + error.message);
                 }
-              }
-            );
-          } else {
-            // Location services are disabled
-            backgroundGeolocation.showLocationSettings();
-          }
+              );
+            } else {
+              // Location services are disabled
+              backgroundGeolocation.showLocationSettings();
+            }
+          });
+
         });
 
+        $rootScope.$on('geolocationUpdated', function (event, latlngDate) {
+          $scope.map.marker.setPosition(latlngDate);
+        });
+        //$scope.marker = this.createMarker(position, $scope.map);
+
       });
 
-      $rootScope.$on('geolocationUpdated', function (event, latlngDate) {
-        $scope.map.marker.setPosition(latlngDate);
-      });
-      //$scope.marker = this.createMarker(position, $scope.map);
-
-    });
 
   })
 
 
-  .controller('PlaylistsCtrl', function ($scope) {
-    $scope.playlists = [
-      {title: 'Reggae', id: 1},
-      {title: 'Chill', id: 2},
-      {title: 'Dubstep', id: 3},
-      {title: 'Indie', id: 4},
-      {title: 'Rap', id: 5},
-      {title: 'Cowbell', id: 6}
-    ];
-  })
 
-  .controller('PlaylistCtrl', function ($scope, $stateParams) {
-  });
