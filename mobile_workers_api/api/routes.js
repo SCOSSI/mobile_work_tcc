@@ -59,10 +59,18 @@ exports.addSampleThree = function (req, res) {
 
 exports.addUser = function (req, res) {
     logger.log('info', 'addUser called!');
-    user.create(req.body, function (err, resp) {
-        if (err) console.log('Error saving addUser');
-        res.json(resp);
-    });
+    Model.findOne( {email: req.body.email}, function (err, result) {
+        if (err) { console.log(JSON.stringify(err)) }
+        if (!result) {
+            console.log("did not found user")
+            user.create(req.body, function (err, resp) {
+                if (err) console.log('Error saving addUser');
+                res.json(resp);
+            });
+        }
+    }
+   
+
 }
 exports.test = function (req, res) {
     console.log(req.body);

@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 //database connection
 var mongoose = require('mongoose');//mongoose orm
-mongoose.connect('mongodb://@localhost:27017/mobile_workers', {safe:true});
+mongoose.connect(' mongodb://scossi:123456@ds019876.mlab.com:19876/mobile_workers_tcc', {safe:true});
 
 //error handlers
 app.use(function(err, req, res, next){
