@@ -49,9 +49,20 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
           }
         }
       })
+      .state('app.problem', {
+        url: '/problem',
+
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/problem.html',
+            controller: 'AppCtrl'
+          }
+        }
+      })
       .state('app.loginface', {
         url: '/loginface',
-        requireAuth: true,
+        cache: false,
+
         views: {
           'menuContent': {
             templateUrl: 'templates/loginface.html',
@@ -61,7 +72,6 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
       })
       .state('app.profile', {
         url: '/profile',
-
         views: {
           'menuContent': {
             templateUrl: 'templates/profile.html',

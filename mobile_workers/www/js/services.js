@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('starter.services', ['ngResource'])
-  .constant("baseURL", "http://s.localtunnel.me/api/")
+  .constant("baseURL", "https://mysterious-savannah-76174.herokuapp.com/api/")
   .factory('geolocationFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
 
-    return $resource(baseURL + "geolocation");
+    return $resource(baseURL + "addUserGeolocation");
 
   }])
   .factory('sampleOneFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
@@ -12,12 +12,27 @@ angular.module('starter.services', ['ngResource'])
     return $resource(baseURL + "addSampleOne");
 
   }])
-  .factory('test', ['$resource', 'baseURL', function ($resource, baseURL) {
+  .factory('sampleTwoFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
 
-    return $resource(baseURL + "test");
+    return $resource(baseURL + "addSampleTwo");
 
   }])
-  .service('user', ['$state', '$localStorage', '$http', function ($state,$localStorage, $http) {
+  .factory('sampleThreeFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
+
+    return $resource(baseURL + "addSampleThree");
+
+  }])
+  .factory('problemFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
+
+    return $resource(baseURL + "problem");
+
+  }])
+  .service('user', ['$state', '$localStorage', '$http', '$q','$resource', 'baseURL', function ($state,$localStorage, $http, $q, $resource, baseURL) {
+
+    this.addUser = function(){
+      return $resource(baseURL + "addUser");
+    }
+
     this.isAuthenticated = function(){
       if($localStorage.hasOwnProperty("accessToken") === false) {
         $state.go("app.loginface");
@@ -28,7 +43,7 @@ angular.module('starter.services', ['ngResource'])
     };
 
     this.getUser = function(){
-      $http.get("https://graph.facebook.com/v2.2/me", {
+      return $http.get("https://graph.facebook.com/v2.2/me", {
         params: {
           access_token: $localStorage.accessToken,
           fields: "id, email,name,gender,location,website,picture,relationship_status",
@@ -40,6 +55,7 @@ angular.module('starter.services', ['ngResource'])
       }, function (error) {
         alert("There was a problem getting your profile.  Check the logs for details.");
         console.log(error);
+        return $q.reject(error);
       });
     };
   }])
@@ -78,10 +94,12 @@ angular.module('starter.services', ['ngResource'])
     }
 
   }])
-  .service('geolocationService', [ '$cordovaGeolocation', function ($cordovaGeolocation) {
+  .service('geolocationService', [ '$cordovaGeolocation','$q', function ($cordovaGeolocation, $q) {
+
     this.getCurrentPosition = function() {
+
       var posOptions = {timeout: 10000, enableHighAccuracy: false};
-      $cordovaGeolocation
+      return $cordovaGeolocation
         .getCurrentPosition(posOptions)
         .then(function (position) {
           var latLong = {latitude: position.coords.latitude, longitude: position.coords.longitude};
@@ -89,6 +107,8 @@ angular.module('starter.services', ['ngResource'])
           return latLong;
         }, function(err) {
           console.log(JSON.stringify(err));
+          return $q.reject(err);
+
         });
 
     }

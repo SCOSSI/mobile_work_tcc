@@ -2,7 +2,7 @@
   <ion-header-bar>
     <h1 class="title">Sample 1</h1>
     <div class="buttons">
-      <button class="button button-clear" ng-click="closeSampleOne()">Close</button>
+      <button class="button " ng-click="closeSampleOne()">Close</button>
     </div>
   </ion-header-bar>
   <ion-content>
@@ -62,6 +62,10 @@
         >
           {{ item.text }}
         </ion-radio>
+
+        <div class="item item-divider" ng-show="sampleOne.feeling != null">
+          What are you felling?
+        </div>
         <ion-radio ng-repeat="item in positiveFeelings"
                    ng-value="item.value"
                    ng-model="sampleOne.feelingPositive"
