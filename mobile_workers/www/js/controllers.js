@@ -303,9 +303,9 @@ angular.module('starter.controllers', [])
       value: "whatsapp audio"
     }, {text: "Whatsapp Text", value: "whatsapp text"}, {text: "Skype", value: "skype"}, {
       text: "Other",
-      value: "other"
+      value: "other" 
     }];
-     
+
     $scope.problems = [{text: "No internet Access", value: "internet"}, {
       text: "Transportation",
       value: "transportation"
