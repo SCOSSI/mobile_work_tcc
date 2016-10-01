@@ -1,6 +1,6 @@
 {
   "name": "mobile_workers",
-  "app_id": "",
+  "app_id": "ed1ab0b2",
   "gulpStartupTasks": [
     "sass",
     "watch"

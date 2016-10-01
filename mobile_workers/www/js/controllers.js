@@ -1,19 +1,48 @@
 angular.module('starter.controllers', [])
 
-  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $ionicPlatform, user, $rootScope, $ionicSideMenuDelegate, geolocationService, sampleOneFactory, $ionicLoading, sampleTwoFactory, sampleThreeFactory, problemFactory) {
+  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $ionicPlatform, user, $rootScope, $ionicSideMenuDelegate, geolocationService, sampleOneFactory, $ionicLoading, sampleTwoFactory, sampleThreeFactory, problemFactory, probleamsNearFactory) {
 
 
     $scope.sampleOne = {};
     $scope.sampleTwo = {};
     $scope.sampleThree = {};
     $scope.problem = {};
+    $scope.problemsNearBy = {};
     $scope.showMenu = user.isAuthenticated();
 
+    $scope.initProblemsNearBy = function () {
+
+      $ionicLoading.show({
+        content: 'Loading...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+      });
+
+      geolocationService.getCurrentPosition().then(function (data) {
+        $scope.problemsNearBy.latitude = data.latitude;
+        $scope.problemsNearBy.longitude = data.longitude;
+
+        probleamsNearFactory.query($scope.problemsNearBy).$promise.then(function (data) {
+
+          $scope.problemsNearBy = data;
+
+          $ionicLoading.hide();
+
+        }, function (errResponse) {
+
+          alert("Error getting your current position!");
+          $ionicLoading.hide();
+        });
+
+      });
+    };
 
     $rootScope.$on('userLogout', function (event, userLogout) {
-      console.log("userLogout: " + userLogout);
+
       $scope.showMenu = !userLogout;
-      $ionicSideMenuDelegate.canDragContent(!userLogout);
+
     });
 
 
@@ -34,7 +63,7 @@ angular.module('starter.controllers', [])
       $scope.modalSampleOne.hide();
     };
 
-    $scope.postProblem = function(){
+    $scope.postProblem = function () {
 
       $ionicLoading.show({
         content: 'Loading...',
@@ -52,26 +81,24 @@ angular.module('starter.controllers', [])
           $scope.problem.latitude = data.latitude;
           $scope.problem.longitude = data.longitude;
           problemFactory.save($scope.problem).$promise.then(function () {
+            $scope.problem = {};
             alert("Problem created!");
           }, function (errResponse) {
-            console.log(JSON.stringify(errResponse));
+            alert("Error saving problem!");
           });
-          console.log(JSON.stringify($scope.problem));
+
           $ionicLoading.hide();
 
         }, function (error) {
-          console.log("error in getting current position problem!");
-         problemFactory.save($scope.problem).$promise.then(function () {
-            alert("Problem created!");
-          }, function (errResponse) {
-            console.log(JSON.stringify(errResponse));
-          });
+
+          alert("Error getting your current position!");
           $ionicLoading.hide();
         });
 
       }, function (error) {
+        alert("Error getting your informations!");
         $ionicLoading.hide();
-        console.log("error in getting user problem!");
+
       });
 
 
@@ -94,26 +121,23 @@ angular.module('starter.controllers', [])
           $scope.sampleOne.latitude = data.latitude;
           $scope.sampleOne.longitude = data.longitude;
           sampleOneFactory.save($scope.sampleOne).$promise.then(function () {
+            alert("Sample saved!");
+            $rootScope.startTracking();
             $scope.closeSampleOne();
           }, function (errResponse) {
-            console.log(JSON.stringify(errResponse));
+            alert("Error saving sample one!");
           });
-          console.log(JSON.stringify($scope.sampleOne));
+
           $ionicLoading.hide();
 
         }, function (error) {
-          console.log("error in getting current posiction sample two!");
-          sampleOneFactory.save($scope.sampleOne).$promise.then(function () {
-            $scope.closeSampleOne();
-          }, function (errResponse) {
-            console.log(JSON.stringify(errResponse));
-          });
           $ionicLoading.hide();
+          alert("Error getting your current position!");
         });
 
       }, function (error) {
         $ionicLoading.hide();
-        console.log("error in getting user sample two!");
+        alert("Error getting your informations!");
       });
 
 
@@ -153,26 +177,22 @@ angular.module('starter.controllers', [])
           $scope.sampleTwo.latitude = data.latitude;
           $scope.sampleTwo.longitude = data.longitude;
           sampleTwoFactory.save($scope.sampleTwo).$promise.then(function () {
+            alert("Sample saved!");
             $scope.closeSampleTwo();
           }, function (errResponse) {
-            console.log(errResponse);
+            alert("Error saving sample two!");
           });
-          console.log(JSON.stringify($scope.sampleTwo));
+
           $ionicLoading.hide();
 
         }, function (error) {
-          console.log("error in getting current posiction sample one!");
-          sampleTwoFactory.save($scope.sampleOne).$promise.then(function () {
-            $scope.closeSampleTwo();
-          }, function (errResponse) {
-            console.log(errResponse);
-          });
+          alert("Error getting your current position!");
           $ionicLoading.hide();
         });
 
       }, function (error) {
         $ionicLoading.hide();
-        console.log("error in getting user sample one!");
+        alert("Error getting your informations!");
       });
 
 
@@ -212,26 +232,21 @@ angular.module('starter.controllers', [])
           $scope.sampleThree.latitude = data.latitude;
           $scope.sampleThree.longitude = data.longitude;
           sampleThreeFactory.save($scope.sampleThree).$promise.then(function () {
+            alert("Sample saved!");
             $scope.closeSampleThree();
           }, function (errResponse) {
-            console.log(errResponse);
+            alert("Error saving sample three!");
           });
-          console.log(JSON.stringify($scope.sampleThree));
           $ionicLoading.hide();
 
         }, function (error) {
-          console.log("error in getting current posiction sample Three!");
-          sampleThreeFactory.save($scope.sampleThree).$promise.then(function () {
-            $scope.closeSampleThree();
-          }, function (errResponse) {
-            console.log(errResponse);
-          });
+          alert("Error getting your current position!");
           $ionicLoading.hide();
         });
 
       }, function (error) {
         $ionicLoading.hide();
-        console.log("error in getting user sample Three!");
+        alert("Error getting your informations!");
       });
 
     };
@@ -291,15 +306,21 @@ angular.module('starter.controllers', [])
       value: "other"
     }];
 
-    $scope.problems = [{text: "No internet Access", value: "internet"}, {text: "Transportation", value: "transportation"}, {text: "Workplace", value: "transportation"}, {text: "Communication", value: "communication"}, {text: "Work equipment", value: "equipment"}, {text: "Other", value: "other"}];
+    $scope.problems = [{text: "No internet Access", value: "internet"}, {
+      text: "Transportation",
+      value: "transportation"
+    }, {text: "Workplace", value: "transportation"}, {
+      text: "Communication",
+      value: "communication"
+    }, {text: "Work equipment", value: "equipment"},{text: "Data transfer", value: "dataTransfer"}, {text: "Other", value: "other"}];
   })
-  .controller('LoginFaceCtrl', function ($scope, $cordovaOauth, $localStorage, $ionicSideMenuDelegate, user, $state, $rootScope, $ionicPlatform, $ionicHistory) {
+  .controller('LoginFaceCtrl', function ($scope, $cordovaOauth, $localStorage, $ionicSideMenuDelegate, user, $state, $rootScope, $ionicPlatform, $ionicHistory, $ionicLoading) {
 
-    if(user.isAuthenticated()){
+    if (user.isAuthenticated()) {
       $ionicHistory.nextViewOptions({
         disableBack: true
       });
-      $state.go("app.profile");
+      $state.go("app.problem");
     }
 
     $ionicPlatform.ready(function () {
@@ -309,8 +330,6 @@ angular.module('starter.controllers', [])
       var notificationOpenedCallback = function (jsonData) {
         //$scope.openModals(jsonData.additionalData.model);
         var additional = jsonData.additionalData;
-        console.log(JSON.stringify(additional.modal));
-        console.log(additional.modal);
         $scope.openModals(additional.modal);
       };
 
@@ -324,43 +343,54 @@ angular.module('starter.controllers', [])
     });
 
 
-        $ionicSideMenuDelegate.canDragContent(false);
+    $ionicSideMenuDelegate.canDragContent(false);
 
-        $scope.login = function () {
-          $cordovaOauth.facebook("1102648526473457", ["email", "user_website", "user_location", "user_relationships"]).then(function (result) {
-            $localStorage.accessToken = result.access_token;
-            user.getUser().then(function (data) {
-              var now = new Date();
-              var userToAdd = {email: data.email, name: data.email, date: now}
-              user.addUser().save(userToAdd).$promise.then(function () {
+    $scope.login = function () {
+      $cordovaOauth.facebook("1102648526473457", ["email", "user_website", "user_location", "user_relationships"]).then(function (result) {
+        $ionicLoading.show({
+          content: 'Loading...',
+          animation: 'fade-in',
+          showBackdrop: true,
+          maxWidth: 200,
+          showDelay: 0
+        });
+        $localStorage.accessToken = result.access_token;
+        user.getUser().then(function (data) {
+          var now = new Date();
+          var userToAdd = {email: data.email, name: data.email, date: now}
+          user.addUser().save(userToAdd).$promise.then(function () {
 
-                $rootScope.$emit('userLogout', false);
-                $ionicHistory.nextViewOptions({
-                  disableBack: true
-                });
-                $state.go("app.profile");
-                }, function (errResponse) {
-                  console.log(JSON.stringify(errResponse));
-                  console.log("Try again!");
-                });
-            }, function (error) {
-              console.log("error in getting user!");
+            $rootScope.$emit('userLogout', false);
+            $ionicHistory.nextViewOptions({
+              disableBack: true
             });
-
-          }, function (error) {
-            console.log("There was a problem signing in!  See the console for logs");
-            alert("There was a problem signing in!  See the console for logs");
-            console.log(error);
+            $ionicLoading.hide();
+            $state.go("app.problem");
+          }, function (errResponse) {
+            $ionicLoading.hide();
+            console.log(errResponse);
           });
-        };
+        }, function (error) {
+          $ionicLoading.hide();
+          console.log("error in getting user!");
+        });
+
+      }, function (error) {
+        console.log("There was a problem signing in!  See the console for logs");
+        alert("There was a problem signing in!  See the console for logs");
+        console.log(error);
+      });
+    };
 
 
   })
-  .controller('ProfileCtrl', function ($scope, $http, $localStorage, $state, user, $rootScope, $ionicLoading, $ionicHistory) {
+  .controller('ProfileCtrl', function ($scope, $http, $localStorage, $state, user, $rootScope, $ionicLoading, $ionicHistory, $ionicSideMenuDelegate) {
     $scope.init = function () {
-      console.log($localStorage.hasOwnProperty("accessToken"));
-//      console.log(user.isAuthenticated());
+
+
       if (user.isAuthenticated()) {
+
+        $ionicSideMenuDelegate.canDragContent(true);
         $ionicLoading.show({
           content: 'Loading...',
           animation: 'fade-in',
@@ -374,16 +404,15 @@ angular.module('starter.controllers', [])
           $ionicLoading.hide();
         }, function (error) {
           $ionicLoading.hide();
-          console.log("error in getting user sample one!");
+          alert("Error getting your informations!");
         });
 
-        console.log(JSON.stringify($scope.profileData));
+
       }
     };
 
     $scope.logout = function () {
       delete $localStorage.accessToken;
-      console.log($localStorage.hasOwnProperty("accessToken"));
       $rootScope.$emit('userLogout', true);
       $ionicHistory.nextViewOptions({
         disableBack: true
@@ -394,119 +423,18 @@ angular.module('starter.controllers', [])
   })
   .controller('MapCtrl', function ($scope, $state, $ionicPlatform, mapService, $rootScope, $interval, geolocationFactory, user) {
 
-
-    $ionicPlatform.ready(function () {
-
-
       var position = {lat: -25.363, lng: 131.044};
 
       $scope.map = mapService.createMap(position);
 
 
-      $ionicPlatform.ready(function () {
-
-        var callbackFn = function (location) {
-          console.log('[js] BackgroundGeolocation callback:  ' + location.latitude + ',' + location.longitude);
-          var latlng = {latitude: location.latitude, longitude: location.longitude};
-          $rootScope.$emit('geolocationUpdated', new google.maps.LatLng(location.latitude, location.longitude));
-
-          user.getUser().then(function (data) {
-            var now = new Date();
-
-            locationsSave = {userEmail: data.email, latitude: location.latitude, longitude: location.longitude, date: new Date()};
-            geolocationFactory.save(locationsSave);
-          }, function (error) {
-            console.log("error in getting user!");
-          });
-
-
-
-
-          backgroundGeolocation.finish();
-
-        };
-
-
-        var failureFn = function (error) {
-          console.log('BackgroundGeolocation error');
-        };
-
-        backgroundGeolocation.configure(callbackFn, failureFn, {
-          desiredAccuracy: 10,
-          stationaryRadius: 200,
-          distanceFilter: 50,
-          // url: 'http://ftsasypskm.localtunnel.me/api/test',
-
-          //httpHeaders: { 'X-FOO': 'bar' },
-          // Android only section
-          locationProvider: backgroundGeolocation.provider.ANDROID_ACTIVITY_PROVIDER,
-          interval: 60000,
-          fastestInterval: 60000,
-          notificationTitle: 'Background tracking',
-          notificationText: 'enabled'
-        });
-
-        backgroundGeolocation.watchLocationMode(
-          function (enabled) {
-            console.log("watchLocationMode " + enabled);
-            if (enabled) {
-              // location service are now enabled
-
-              backgroundGeolocation.start(function () {
-                  console.log("isLocationEnabled start");
-                },
-                function (error) {
-
-                  if (error.code === 2) {
-
-                    backgroundGeolocation.showAppSettings();
-
-                  } else {
-                    console.log('Start failed: ' + error.message);
-
-                  }
-                });
-            } else {
-              console.log('Error watching location');
-            }
-          },
-          function (error) {
-            console.log('Error watching location mode. Error:' + error);
-          }
-        );
-
-        backgroundGeolocation.isLocationEnabled(function (enabled) {
-
-          if (enabled) {
-            console.log("isLocationEnabled " + enabled);
-            backgroundGeolocation.start(
-              function () {
-
-              },
-              function (error) {
-                if (error.code === 2) {
-                  backgroundGeolocation.showAppSettings();
-                } else {
-                  console.log('Start failed: ' + error.message);
-                }
-              }
-            );
-          } else {
-            // Location services are disabled
-            backgroundGeolocation.showLocationSettings();
-          }
-        });
-
-      });
+      $rootScope.startTracking();
 
       $rootScope.$on('geolocationUpdated', function (event, latlng) {
         $scope.map.marker.setPosition(latlng);
         $scope.map.map.setCenter(latlng);
 
       });
-      //$scope.marker = this.createMarker(position, $scope.map);
-
-    });
 
 
   })

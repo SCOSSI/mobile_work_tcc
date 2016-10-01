@@ -1,6 +1,6 @@
-<ion-view title="Problem">
+<ion-view title="Report problem">
   <ion-content>
-    <form ng-submit="postProblem()">
+    <form ng-submit="postProblem()" name="problemForm">
       <div class="list">
 
         <div class="item item-divider">
@@ -10,12 +10,12 @@
         <ion-radio ng-repeat="item in places"
                    ng-value="item.value"
                    ng-model="problem.place"
-                   name="place">
+                   name="place" ng-required="true">
           {{ item.text }}
         </ion-radio>
         <label class="item item-input" ng-show="problem.place == 'other'">
           <span class="input-label">Other</span>
-          <input type="text" ng-model="problem.placeOther">
+          <input type="text" ng-model="problem.placeOther" ng-required="problem.place == 'other'">
         </label>
 
         <div class="item item-divider">
@@ -25,19 +25,30 @@
         <ion-radio ng-repeat="item in problems"
                    ng-value="item.value"
                    ng-model="problem.problem"
-                   name="problem">
+                   name="problem" ng-required="true">
           {{ item.text }}
         </ion-radio>
         <label class="item item-input" ng-show="problem.problem == 'other'">
           <span class="input-label">Other</span>
-          <input type="text" ng-model="problem.problemOther">
+          <input type="text" ng-model="problem.problemOther" ng-required="problem.problem == 'other'">
         </label>
+
+        <div class="item item-divider">
+          Detail
+        </div>
         <label class="item item-input">
-          <span class="input-label">Detail</span>
+          <span class="input-label">Detail...</span>
           <textarea ng-model="problem.detail" ></textarea>
         </label>
+        <div class="item item-divider">
+          Solution
+        </div>
+        <label class="item item-input" >
+          <span class="input-label">Solution...</span>
+          <textarea ng-model="problem.solution" ></textarea>
+        </label>
       </div>
-      <button class="button button-full button-positive" type="submit">
+      <button class="button button-full button-positive" type="submit" ng-disabled="!problemForm.$valid">
         Send
       </button>
     </form>

@@ -6,7 +6,7 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="postSampleOne()">
+    <form name="sampleOneForm" ng-submit="postSampleOne()">
       <div class="list">
 
         <div class="item item-divider">
@@ -16,19 +16,20 @@
         <ion-radio ng-repeat="item in places"
                    ng-value="item.value"
                    ng-model="sampleOne.place"
-                    name="place">
+                    name="place" ng-required="true">
           {{ item.text }}
+
         </ion-radio>
         <label class="item item-input" ng-show="sampleOne.place == 'other'">
           <span class="input-label">Other</span>
-          <input type="text" ng-model="sampleOne.placeOther">
+          <input type="text" ng-model="sampleOne.placeOther" ng-required="sampleOne.place == 'other'">
         </label>
         <div class="item item-divider">
           What are you doing right now?
         </div>
         <ion-radio ng-repeat="item in tasks"
                    ng-value="item.value"
-                   ng-model="sampleOne.doing" name="doing">
+                   ng-model="sampleOne.doing" name="doing" ng-required="true">
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider">
@@ -36,7 +37,7 @@
         </div>
         <ion-radio ng-repeat="item in yesorno"
                    ng-value="item.value"
-                   ng-model="sampleOne.isWorkingWithSomeone" name="isWorkingWithSomeone">
+                   ng-model="sampleOne.isWorkingWithSomeone" name="isWorkingWithSomeone" ng-required="true">
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider" ng-show="sampleOne.isWorkingWithSomeone == 'yes'">
@@ -45,12 +46,12 @@
         <ion-radio ng-repeat="item in persons"
                    ng-value="item.value"
                    ng-model="sampleOne.isWorkingWith"
-                   ng-show="sampleOne.isWorkingWithSomeone == 'yes'" name="isWorkingWith">
+                   ng-show="sampleOne.isWorkingWithSomeone == 'yes'" name="isWorkingWith" ng-required="sampleOne.isWorkingWithSomeone == 'yes'">
           {{ item.text }}
         </ion-radio>
         <label class="item item-input" ng-show="sampleOne.isWorkingWith == 'other'">
           <span class="input-label">Other</span>
-          <input type="text" ng-model="sampleOne.isWorkingWithSomeoneOther">
+          <input type="text" ng-model="sampleOne.isWorkingWithSomeoneOther" ng-required="sampleOne.isWorkingWith == 'other'">
         </label>
 
         <div class="item item-divider">
@@ -58,7 +59,7 @@
         </div>
         <ion-radio ng-repeat="item in feelings"
                    ng-value="item.value"
-                   ng-model="sampleOne.feeling" name="feeling"
+                   ng-model="sampleOne.feeling" name="feeling" ng-required="true"
         >
           {{ item.text }}
         </ion-radio>
@@ -69,20 +70,20 @@
         <ion-radio ng-repeat="item in positiveFeelings"
                    ng-value="item.value"
                    ng-model="sampleOne.feelingPositive"
-                   ng-show="sampleOne.feeling == 'positive'" name="feelingPositive"
+                   ng-show="sampleOne.feeling == 'positive'" name="feelingPositive" ng-required="sampleOne.feeling == 'positive'"
         >
           {{ item.text }}
         </ion-radio>
         <ion-radio ng-repeat="item in negativeFeelings"
                    ng-value="item.value"
                    ng-model="sampleOne.feelingNegative"
-                   ng-show="sampleOne.feeling == 'negative'" name="feelingNegative"
+                   ng-show="sampleOne.feeling == 'negative'" name="feelingNegative" ng-required="sampleOne.feeling == 'negative'"
         >
           {{ item.text }}
         </ion-radio>
 
       </div>
-      <button class="button button-full button-positive" type="submit">
+      <button class="button button-full button-positive" ng-disabled="!sampleOneForm.$valid" type="submit">
         Send
       </button>
     </form>

@@ -27,6 +27,12 @@ angular.module('starter.services', ['ngResource'])
     return $resource(baseURL + "problem");
 
   }])
+
+  .factory('probleamsNearFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
+
+    return $resource(baseURL + "getProblemsNearOneKm");
+
+  }])
   .service('user', ['$state', '$localStorage', '$http', '$q','$resource', 'baseURL', function ($state,$localStorage, $http, $q, $resource, baseURL) {
 
     this.addUser = function(){
@@ -50,11 +56,11 @@ angular.module('starter.services', ['ngResource'])
           format: "json"
         }
       }).then(function (result) {
-        console.log(JSON.stringify(result.data));
+
          return result.data;
       }, function (error) {
         alert("There was a problem getting your profile.  Check the logs for details.");
-        console.log(error);
+   
         return $q.reject(error);
       });
     };
@@ -98,15 +104,15 @@ angular.module('starter.services', ['ngResource'])
 
     this.getCurrentPosition = function() {
 
-      var posOptions = {timeout: 10000, enableHighAccuracy: false};
+      var posOptions = {timeout: 100000, enableHighAccuracy: false};
       return $cordovaGeolocation
         .getCurrentPosition(posOptions)
         .then(function (position) {
           var latLong = {latitude: position.coords.latitude, longitude: position.coords.longitude};
-          console.log(JSON.stringify(latLong));
+
           return latLong;
         }, function(err) {
-          console.log(JSON.stringify(err));
+
           return $q.reject(err);
 
         });

@@ -6,7 +6,7 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="postSampleTwo()">
+    <form name="sampleTwoForm" ng-submit="postSampleTwo()">
       <div class="list">
 
         <div class="item item-divider  item-text-wrap">
@@ -16,13 +16,13 @@
         <ion-radio ng-repeat="item in yesorno"
                    ng-value="item.value"
                    ng-model="sampleTwo.didLookForInformation"
-                    name="didLookForInformation">
+                    name="didLookForInformation" ng-required="true">
 
           {{ item.text }}
         </ion-radio>
         <label class="item item-input" ng-show="sampleTwo.didLookForInformation == 'yes'">
           <span class="input-label">What did you need?</span>
-          <input type="text" ng-model="sampleTwo.informationSearched">
+          <input type="text" ng-model="sampleTwo.informationSearched" ng-required="sampleTwo.didLookForInformation == 'yes'">
         </label>
         <div class="item item-divider">
           Did you find what you needed?
@@ -30,7 +30,7 @@
         <ion-radio ng-repeat="item in  yesorno"
                    ng-value="item.value"
                    ng-model="sampleTwo.findWhatNeeded"
-        name="findWhatNeeded">
+        name="findWhatNeeded" ng-required="true">
           {{ item.text }}
         </ion-radio>
         <div class="item item-divider" ng-show="sampleTwo.findWhatNeeded == 'yes'">
@@ -39,12 +39,12 @@
         <ion-radio ng-repeat="item in placesToFindInformation" ng-show="sampleTwo.findWhatNeeded == 'yes'"
                    ng-value="item.value"
                    ng-model="sampleTwo.placeFoundInformation"
-        name="placeFoundInformation">
+        name="placeFoundInformation" ng-required="sampleTwo.findWhatNeeded == 'yes'">
           {{ item.text }}
         </ion-radio>
         <label class="item item-input"  ng-show="sampleTwo.placeFoundInformation == 'people network'">
           <span class="input-label">Who is this person?</span>
-          <input type="text" ng-model="sampleTwo.personWhoGaveInformation">
+          <input type="text" ng-model="sampleTwo.personWhoGaveInformation" ng-required="sampleTwo.placeFoundInformation == 'people network'">
         </label>
         <div class="item item-divider" ng-show="sampleTwo.placeFoundInformation == 'people network'">
           Which tool did you use?
@@ -53,16 +53,16 @@
                    ng-value="item.value"
                    ng-model="sampleTwo.communicationToolUsed"
                    ng-show="sampleTwo.placeFoundInformation == 'people network'"
-        name="communicationToolUsed">
+        name="communicationToolUsed" ng-required="sampleTwo.placeFoundInformation == 'people network'">
           {{ item.text }}
         </ion-radio>
         <label class="item item-input" ng-show="sampleTwo.communicationToolUsed == 'other'">
           <span class="input-label">Other</span>
-          <input type="text" ng-model="sampleTwo.communicationToolUsedOther">
+          <input type="text" ng-model="sampleTwo.communicationToolUsedOther" ng-required="sampleTwo.communicationToolUsed == 'other'">
         </label>
 
       </div>
-      <button class="button button-full button-positive" type="submit">
+      <button class="button button-full button-positive" type="submit" ng-disabled="!sampleTwoForm.$valid">
         Send
       </button>
     </form>
