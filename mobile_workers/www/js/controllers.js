@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $ionicPlatform, user, $rootScope, $ionicSideMenuDelegate, geolocationService, sampleOneFactory, $ionicLoading, sampleTwoFactory, sampleThreeFactory, problemFactory, probleamsNearFactory) {
+  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, $ionicPlatform, user, $rootScope, $ionicSideMenuDelegate, geolocationService, sampleOneFactory, loadingService, sampleTwoFactory, sampleThreeFactory, problemFactory, probleamsNearFactory) {
 
 
     $scope.sampleOne = {};
@@ -12,13 +12,7 @@ angular.module('starter.controllers', [])
 
     $scope.initProblemsNearBy = function () {
 
-      $ionicLoading.show({
-        content: 'Loading...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
+      loadingService.showLoading();
 
       geolocationService.getCurrentPosition().then(function (data) {
         $scope.problemsNearBy.latitude = data.latitude;
@@ -28,12 +22,12 @@ angular.module('starter.controllers', [])
 
           $scope.problemsNearBy = data;
 
-          $ionicLoading.hide();
+          loadingService.hideLoading();
 
         }, function (errResponse) {
 
           alert("Error getting your current position!");
-          $ionicLoading.hide();
+          loadingService.hideLoading();
         });
 
       });
@@ -53,7 +47,9 @@ angular.module('starter.controllers', [])
     });
 
     $scope.showSampleOne = function () {
+      loadingService.showLoading();
       if (user.isAuthenticated()) {
+        loadingService.hideLoading();
         $scope.modalSampleOne.show();
       }
     };
@@ -65,13 +61,7 @@ angular.module('starter.controllers', [])
 
     $scope.postProblem = function () {
 
-      $ionicLoading.show({
-        content: 'Loading...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
+      loadingService.showLoading();
 
       user.getUser().then(function (data) {
         var now = new Date();
@@ -82,22 +72,20 @@ angular.module('starter.controllers', [])
           $scope.problem.longitude = data.longitude;
           problemFactory.save($scope.problem).$promise.then(function () {
             $scope.problem = {};
+            loadingService.hideLoading();
             alert("Problem created!");
           }, function (errResponse) {
+            loadingService.hideLoading();
             alert("Error saving problem!");
           });
-
-          $ionicLoading.hide();
-
         }, function (error) {
-
+          loadingService.hideLoading();
           alert("Error getting your current position!");
-          $ionicLoading.hide();
         });
 
       }, function (error) {
         alert("Error getting your informations!");
-        $ionicLoading.hide();
+        loadingService.hideLoading();
 
       });
 
@@ -105,13 +93,7 @@ angular.module('starter.controllers', [])
     }
     $scope.postSampleOne = function () {
 
-      $ionicLoading.show({
-        content: 'Loading...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
+      loadingService.showLoading();
 
       user.getUser().then(function (data) {
         var now = new Date();
@@ -121,22 +103,20 @@ angular.module('starter.controllers', [])
           $scope.sampleOne.latitude = data.latitude;
           $scope.sampleOne.longitude = data.longitude;
           sampleOneFactory.save($scope.sampleOne).$promise.then(function () {
+            loadingService.hideLoading();
             alert("Sample saved!");
             $rootScope.startTracking();
             $scope.closeSampleOne();
           }, function (errResponse) {
+            loadingService.hideLoading();
             alert("Error saving sample one!");
           });
-
-          $ionicLoading.hide();
-
         }, function (error) {
-          $ionicLoading.hide();
+          loadingService.hideLoading();
           alert("Error getting your current position!");
         });
-
       }, function (error) {
-        $ionicLoading.hide();
+        loadingService.hideLoading();
         alert("Error getting your informations!");
       });
 
@@ -150,7 +130,9 @@ angular.module('starter.controllers', [])
     });
 
     $scope.showSampleTwo = function () {
+      loadingService.showLoading();
       if (user.isAuthenticated()) {
+        loadingService.hideLoading();
         $scope.modalSampleTwo.show();
       }
     };
@@ -161,13 +143,7 @@ angular.module('starter.controllers', [])
     };
 
     $scope.postSampleTwo = function () {
-      $ionicLoading.show({
-        content: 'Loading...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
+      loadingService.showLoading();
 
       user.getUser().then(function (data) {
         var now = new Date();
@@ -177,21 +153,19 @@ angular.module('starter.controllers', [])
           $scope.sampleTwo.latitude = data.latitude;
           $scope.sampleTwo.longitude = data.longitude;
           sampleTwoFactory.save($scope.sampleTwo).$promise.then(function () {
+            loadingService.hideLoading();
             alert("Sample saved!");
             $scope.closeSampleTwo();
           }, function (errResponse) {
+            loadingService.hideLoading();
             alert("Error saving sample two!");
           });
-
-          $ionicLoading.hide();
-
         }, function (error) {
+          loadingService.hideLoading();
           alert("Error getting your current position!");
-          $ionicLoading.hide();
         });
-
       }, function (error) {
-        $ionicLoading.hide();
+        loadingService.hideLoading();
         alert("Error getting your informations!");
       });
 
@@ -205,7 +179,9 @@ angular.module('starter.controllers', [])
     });
 
     $scope.showSampleThree = function () {
+      loadingService.showLoading();
       if (user.isAuthenticated()) {
+        loadingService.hideLoading();
         $scope.modalSampleThree.show();
       }
     };
@@ -216,13 +192,7 @@ angular.module('starter.controllers', [])
     };
 
     $scope.postSampleThree = function () {
-      $ionicLoading.show({
-        content: 'Loading...',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-      });
+      loadingService.showLoading();
 
       user.getUser().then(function (data) {
         var now = new Date();
@@ -232,20 +202,19 @@ angular.module('starter.controllers', [])
           $scope.sampleThree.latitude = data.latitude;
           $scope.sampleThree.longitude = data.longitude;
           sampleThreeFactory.save($scope.sampleThree).$promise.then(function () {
+            loadingService.hideLoading();
             alert("Sample saved!");
             $scope.closeSampleThree();
           }, function (errResponse) {
+            loadingService.hideLoading();
             alert("Error saving sample three!");
           });
-          $ionicLoading.hide();
-
         }, function (error) {
           alert("Error getting your current position!");
-          $ionicLoading.hide();
+          loadingService.hideLoading();
         });
-
       }, function (error) {
-        $ionicLoading.hide();
+        loadingService.hideLoading();
         alert("Error getting your informations!");
       });
 
@@ -303,7 +272,7 @@ angular.module('starter.controllers', [])
       value: "whatsapp audio"
     }, {text: "Whatsapp Text", value: "whatsapp text"}, {text: "Skype", value: "skype"}, {
       text: "Other",
-      value: "other" 
+      value: "other"
     }];
 
     $scope.problems = [{text: "No internet Access", value: "internet"}, {
@@ -314,7 +283,7 @@ angular.module('starter.controllers', [])
       value: "communication"
     }, {text: "Work equipment", value: "equipment"},{text: "Data transfer", value: "dataTransfer"}, {text: "Other", value: "other"}];
   })
-  .controller('LoginFaceCtrl', function ($scope, $cordovaOauth, $localStorage, $ionicSideMenuDelegate, user, $state, $rootScope, $ionicPlatform, $ionicHistory, $ionicLoading) {
+  .controller('LoginFaceCtrl', function ($scope, $cordovaOauth, $localStorage, $ionicSideMenuDelegate, user, $state, $rootScope, $ionicPlatform, $ionicHistory, loadingService) {
 
     if (user.isAuthenticated()) {
       $ionicHistory.nextViewOptions({
@@ -345,15 +314,11 @@ angular.module('starter.controllers', [])
 
     $ionicSideMenuDelegate.canDragContent(false);
 
+
     $scope.login = function () {
+      loadingService.showLoading();
       $cordovaOauth.facebook("1102648526473457", ["email", "user_website", "user_location", "user_relationships"]).then(function (result) {
-        $ionicLoading.show({
-          content: 'Loading...',
-          animation: 'fade-in',
-          showBackdrop: true,
-          maxWidth: 200,
-          showDelay: 0
-        });
+
         $localStorage.accessToken = result.access_token;
         user.getUser().then(function (data) {
           var now = new Date();
@@ -364,46 +329,38 @@ angular.module('starter.controllers', [])
             $ionicHistory.nextViewOptions({
               disableBack: true
             });
-            $ionicLoading.hide();
+            loadingService.hideLoading();
             $state.go("app.problem");
           }, function (errResponse) {
-            $ionicLoading.hide();
+            loadingService.hideLoading();
             console.log(errResponse);
           });
         }, function (error) {
-          $ionicLoading.hide();
+          loadingService.hideLoading();
           console.log("error in getting user!");
         });
 
       }, function (error) {
+        loadingService.hideLoading();
         console.log("There was a problem signing in!  See the console for logs");
         alert("There was a problem signing in!  See the console for logs");
-        console.log(error);
       });
     };
 
 
   })
-  .controller('ProfileCtrl', function ($scope, $http, $localStorage, $state, user, $rootScope, $ionicLoading, $ionicHistory, $ionicSideMenuDelegate) {
+  .controller('ProfileCtrl', function ($scope, $http, $localStorage, $state, user, $rootScope, loadingService, $ionicHistory, $ionicSideMenuDelegate) {
     $scope.init = function () {
-
-
       if (user.isAuthenticated()) {
 
         $ionicSideMenuDelegate.canDragContent(true);
-        $ionicLoading.show({
-          content: 'Loading...',
-          animation: 'fade-in',
-          showBackdrop: true,
-          maxWidth: 200,
-          showDelay: 0
-        });
+        loadingService.showLoading();
 
         user.getUser().then(function (data) {
           $scope.profileData = data;
-          $ionicLoading.hide();
+          loadingService.hideLoading();
         }, function (error) {
-          $ionicLoading.hide();
+          loadingService.hideLoading();
           alert("Error getting your informations!");
         });
 

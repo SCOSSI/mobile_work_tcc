@@ -1,0 +1,36 @@
+<ion-view title="Problems nearby 1km" ng-init="initProblemsNearBy()">
+  <ion-content>
+    <div class="list card">
+      <ion-list>
+        <ion-item ng-repeat="item in problemsNearBy | orderBy:'-date'">
+          <ion-card>
+
+            <h2 class="item item-icon-left"><i class="icon ion-email"></i>{{item.userEmail}}</h2>
+
+
+            <p class="item item-icon-left"><i class="icon ion-calendar"></i>{{item.date | date:'MM/dd/yyyy  h:mma'}}</p>
+
+            <p class="item item-icon-left">
+              <i class="icon ion-location"></i>
+              {{item.place}}
+            </p>
+            <p class="item item-icon-left">
+              <i class="icon ion-alert-circled"></i>
+              {{item.problem}}
+
+            </p>
+            <p ng-show="item.solution != null" class="item item-icon-left">
+              <i class="icon  ion-lightbulb"></i>
+
+              {{item.solution}}
+
+            </p>
+
+
+          </ion-card>
+        </ion-item>
+      </ion-list>
+    </div>
+
+  </ion-content>
+</ion-view>

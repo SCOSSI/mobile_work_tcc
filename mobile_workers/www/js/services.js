@@ -60,7 +60,7 @@ angular.module('starter.services', ['ngResource'])
          return result.data;
       }, function (error) {
         alert("There was a problem getting your profile.  Check the logs for details.");
-   
+
         return $q.reject(error);
       });
     };
@@ -119,6 +119,23 @@ angular.module('starter.services', ['ngResource'])
 
     }
 
+
+  }])
+  .service('loadingService', ['$ionicLoading', function ($ionicLoading) {
+
+    this.showLoading = function () {
+      $ionicLoading.show({
+        content: 'Loading...',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+      });
+    };
+
+    this.hideLoading = function () {
+      $ionicLoading.hide();
+    }
 
   }])
 ;

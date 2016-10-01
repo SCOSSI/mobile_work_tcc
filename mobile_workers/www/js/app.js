@@ -13,15 +13,12 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
       if (window.cordova && window.cordova.plugins.Keyboard) {
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         cordova.plugins.Keyboard.disableScroll(true);
-
       }
       if (window.StatusBar) {
-
         StatusBar.styleDefault();
       }
 
       $rootScope.startTracking = function () {
-        //$ionicPlatform.ready(function () {
 
         var callbackFn = function (location) {
           console.log('[js] BackgroundGeolocation callback:  ' + location.latitude + ',' + location.longitude);
@@ -46,7 +43,6 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
           backgroundGeolocation.finish();
 
         };
-
 
         var failureFn = function (error) {
           console.log('BackgroundGeolocation error');
@@ -118,13 +114,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'n
           }
         });
 
-        //});
       };
-
-
-
-
-
     });
 
   })
